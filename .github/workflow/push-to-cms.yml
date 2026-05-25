@@ -1,0 +1,31 @@
+name: Push to CMS
+on:
+  workflow_call:
+    inputs:
+      problems:
+        description: 'Problem name'
+        default: ''
+        type: string
+      
+jobs:
+  push:
+    runs-on: [self-hosted]
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: gogo
+        run: |
+          set -e
+          for prob in ${{ inputs.problems }}; do 
+            if [ ! -d "${prob}" ]; then
+              echo "'${prob}' Not Found"
+              exit 1
+            fi
+            cd "${prob}"
+            tps gen
+            tps export CMS -a none -o cms_dir
+            cmsImportTask cms_dir
+            rm -rf cms_dir
+            cd ..
+          done
