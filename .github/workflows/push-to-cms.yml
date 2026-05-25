@@ -6,6 +6,10 @@ on:
         description: 'File path. Ex. "Day1/Sample"'
         default: ''
         type: string
+      contestID:
+        default: '1'
+        required: false
+        type: string
       first:
         description: 'first push to CMS?'
         default: false
@@ -30,9 +34,9 @@ jobs:
             tps gen
             tps export CMS 1 -a none -o cms_dir
             if [ "${{ inputs.first }}" = "true" ]; then
-              cmsImportTask cms_dir
+              cmsImportTask cms_dir -c ${{inputs.contestID}}
             else
-              cmsImportTask cms_dir --update
+              cmsImportTask cms_dir --update -c ${{inputs.contestID}}
             fi
             rm -rf cms_dir
             cd ..
