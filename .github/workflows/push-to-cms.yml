@@ -10,10 +10,6 @@ on:
         default: '1'
         required: false
         type: string
-      first:
-        description: 'first push to CMS?'
-        default: false
-        type: boolean
       
 jobs:
   push:
@@ -32,12 +28,8 @@ jobs:
             fi
             cd "${prob}"
             tps gen
-            tps export CMS 1 -a none -o cms_dir
-            if [ "${{ inputs.first }}" = "true" ]; then
-              cmsImportTask cms_dir -c ${{inputs.contestID}}
-            else
-              cmsImportTask cms_dir --update -c ${{inputs.contestID}}
-            fi
+            tps export CMS -a none -o cms_dir
+            cmsImportTask cms_dir --update -c ${{inputs.contestID}}
             rm -rf cms_dir
             cd ..
           done
