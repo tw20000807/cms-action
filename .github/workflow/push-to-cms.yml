@@ -3,9 +3,13 @@ on:
   workflow_call:
     inputs:
       problems:
-        description: 'Problem name'
+        description: 'File path. Ex. "Day1/Sample"'
         default: ''
         type: string
+      first:
+        description: 'first push to CMS?'
+        default: false
+        type: boolean
       
 jobs:
   push:
@@ -25,7 +29,11 @@ jobs:
             cd "${prob}"
             tps gen
             tps export CMS -a none -o cms_dir
-            cmsImportTask cms_dir
+            if [ "${{ inputs.first }}" = "true" ]; then
+              cmsImportTask cms_dir
+            else
+              cmsImportTask cms_dir --update
+            fi
             rm -rf cms_dir
             cd ..
           done
