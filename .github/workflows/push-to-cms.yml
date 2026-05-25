@@ -28,7 +28,7 @@ jobs:
             fi
             cd "${prob}"
             tps gen
-            tps export CMS -a none -o cms_dir
+            tps export CMS 1 -a none -o cms_dir
             if [ "${{ inputs.first }}" = "true" ]; then
               cmsImportTask cms_dir
             else
