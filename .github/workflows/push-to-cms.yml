@@ -7,16 +7,10 @@ on:
         default: ''
         type: string
       contestID:
-        description: 'Contest id (-c). Leave empty to not attach to a contest.'
-        default: ''
+        default: '1'
         required: false
         type: string
-      prefix:
-        description: 'Task name prefix (-p). Leave empty for no prefix.'
-        default: ''
-        required: false
-        type: string
-
+      
 jobs:
   push:
     runs-on: [self-hosted]
@@ -27,14 +21,7 @@ jobs:
       - name: gogo
         run: |
           set -e
-          args=()
-          if [ -n "${{ inputs.contestID }}" ]; then
-            args+=(-c "${{ inputs.contestID }}")
-          fi
-          if [ -n "${{ inputs.prefix }}" ]; then
-            args+=(-p "${{ inputs.prefix }}")
-          fi
-          for prob in ${{ inputs.problems }}; do
+          for prob in ${{ inputs.problems }}; do 
             if [ ! -d "${prob}" ]; then
               echo "'${prob}' Not Found"
               exit 1
@@ -42,7 +29,7 @@ jobs:
             cd "${prob}"
             tps gen
             tps export CMS 1 -a none -o cms_dir
-            cmsImportTask cms_dir --update "${args[@]}"
+            cmsImportTask cms_dir --update -c ${{inputs.contestID}}
             rm -rf cms_dir
             cd ..
           done
