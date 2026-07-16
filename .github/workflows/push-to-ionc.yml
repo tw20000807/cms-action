@@ -1,4 +1,4 @@
-name: Push to CMS
+name: Push to IONC
 on:
   workflow_call:
     inputs:
