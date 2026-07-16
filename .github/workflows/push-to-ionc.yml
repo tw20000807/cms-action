@@ -1,0 +1,35 @@
+name: Push to CMS
+on:
+  workflow_call:
+    inputs:
+      problems:
+        description: 'File path. Ex. "Day1/Sample"'
+        default: ''
+        type: string
+      contestID:
+        default: '1'
+        required: false
+        type: string
+      
+jobs:
+  push:
+    runs-on: [self-hosted]
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: gogo
+        run: |
+          set -e
+          for prob in ${{ inputs.problems }}; do 
+            if [ ! -d "${prob}" ]; then
+              echo "'${prob}' Not Found"
+              exit 1
+            fi
+            cd "${prob}"
+            tps gen
+            tps export CMS 1 -a none -o cms_dir
+            cmsImportTask cms_dir --update -c ${{inputs.contestID}}
+            rm -rf cms_dir
+            cd ..
+          done
