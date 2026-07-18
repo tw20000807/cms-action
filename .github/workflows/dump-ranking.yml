@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: tw20000807/cms-actions/.github/actions/dump-ranking@main
+      - uses: tw20000807/cms-action/.github/actions/dump-ranking@main
         with:
           url: ${{ inputs.url }}
           target: ${{ inputs.target }}
